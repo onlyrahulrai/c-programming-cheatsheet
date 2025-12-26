@@ -405,7 +405,7 @@ int (*p2)[3];  // Pointer to array
 
 ---
 
-## 📌 Dynamic Memory Allocation
+# Dynamic Memory Allocation
 
 Dynamic Memory Allocation (DMA) allows a program to **request memory at runtime** instead of compile time.  
 This memory is allocated from the **Heap**, unlike local variables which are stored on the stack.
