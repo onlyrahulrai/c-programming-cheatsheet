@@ -74,11 +74,270 @@ The content is designed for:
 
 ---
 
-## Strings
+# String
 
-- Character arrays  
-- String functions  
-- Difference between char array and string literal  
+A **string** is a sequence of characters terminated by a **null character (`'\0'`)**.  
+Strings can be handled using:
+- Character arrays
+- Pointers to string literals
+- Standard string library functions (`<string.h>`)
+
+---
+
+## 📚 Header File Required
+
+```c
+#include <string.h>
+````
+
+Provides commonly used string functions like:
+
+* `strlen()`
+* `strcpy()`
+* `strcmp()`
+* `strcat()`
+
+---
+
+## 🔹 1. Character Array vs Pointer to String Literal
+
+### 📄 Example
+
+```c
+char str1[] = "Pankaj";   // Writable
+char str2[] = "Neeraj";   // Writable
+char *str3 = "Sharma";   // Read-only
+```
+
+### 🧠 Key Differences
+
+| Feature              | `char arr[]`     | `char *p = "text"`    |
+| -------------------- | ---------------- | --------------------- |
+| Memory               | Stack / writable | Read-only section     |
+| Content modification | ✅ Allowed        | ❌ Not allowed         |
+| Reassignment         | ❌ Not allowed    | ✅ Allowed             |
+| Pointer arithmetic   | Limited          | ✅ Allowed (read-only) |
+
+❌ Invalid:
+
+```c
+str1 = "Change";   // array name cannot be reassigned
+```
+
+✔ Valid:
+
+```c
+str3 = "Hello World";
+```
+
+---
+
+## 🔹 Pointer Arithmetic on Strings
+
+Pointer arithmetic on strings is **allowed for reading only**.
+
+```c
+str3 += 3;
+printf("%s\n", str3);   // prints from 3rd index
+```
+
+Example:
+
+```
+"Hello World"
+   ^
+Output: lo World
+```
+
+---
+
+## 🔹 String Literal Expressions
+
+```c
+printf("%s\n", "Hello World" + 5);   // prints " World"
+printf("%c\n", *("Hello" + 1));      // prints 'e'
+```
+
+✔ Allowed because:
+
+* String literal decays to `char *`
+* Only read operation is performed
+
+---
+
+## 🔹 String Pooling (Compiler Optimization)
+
+```c
+char *p = "Hello";
+char *q = "Hello";
+```
+
+* Compiler **may** store only one copy of `"Hello"`
+* `p` and `q` **may point to the same address**
+* This behavior is **implementation-dependent**
+
+❌ Wrong comparison:
+
+```c
+&p == &q   // compares pointer variables
+```
+
+✔ Correct comparison:
+
+```c
+p == q     // compares string literal addresses
+```
+
+---
+
+## 🔹 2. Array of Strings vs Array of Pointers
+
+### 📄 Example
+
+```c
+char str1[][256] = {
+    "Hi",
+    "How'r you?",
+    "How's going?",
+    "I hope you are doing going good"
+};
+
+char *str2[] = {
+    "Hi",
+    "How'r you?",
+    "How's going?",
+    "I hope you are doing going good"
+};
+```
+
+### 🧠 Memory Difference
+
+| Aspect             | `char str1[][256]` | `char *str2[]`    |
+| ------------------ | ------------------ | ----------------- |
+| Memory             | Continuous block   | Array of pointers |
+| Modifiable strings | ✅ Yes              | ❌ No              |
+| Memory usage       | More               | Less              |
+| Flexibility        | Less               | More              |
+
+---
+
+### 🔹 Correct Access Patterns
+
+| Expression    | Meaning                   |
+| ------------- | ------------------------- |
+| `str1[i]`     | i-th string               |
+| `str1[i][j]`  | j-th character            |
+| `str2[i]`     | pointer to string literal |
+| `str2[i] + k` | string from index k       |
+
+Example:
+
+```c
+printf("%s\n", *(str2 + 1) + 4);   // prints "r you?"
+```
+
+---
+
+## 🔹 3. Standard String Functions (`<string.h>`)
+
+---
+
+### 🔸 `strlen()`
+
+```c
+strlen(str);
+```
+
+* Returns number of characters
+* Does NOT count `'\0'`
+
+Example:
+
+```
+"HelloWorld" → 10
+```
+
+---
+
+### 🔸 `strcpy()`
+
+```c
+strcpy(dest, src);
+```
+
+* Copies string including `'\0'`
+* Destination must be large enough
+
+❌ Dangerous if buffer is small
+
+---
+
+### 🔸 `strcmp()`
+
+```c
+strcmp(str1, str2);
+```
+
+Returns:
+
+* `0` → strings are equal
+* `<0` → str1 < str2
+* `>0` → str1 > str2
+
+---
+
+### 🔸 `strcat()`
+
+```c
+strcat(dest, src);
+```
+
+* Appends `src` to `dest`
+* Destination must have enough free space
+
+❌ **Most common buffer overflow error**
+
+---
+
+## ⚠️ Common String Mistakes (Exam Traps)
+
+| Mistake                              | Result             |
+| ------------------------------------ | ------------------ |
+| Modifying string literal             | Undefined behavior |
+| Using `%s` with wrong type           | Runtime error      |
+| Buffer too small for `strcpy/strcat` | Memory corruption  |
+| Forgetting `'\0'`                    | Incorrect output   |
+| Comparing strings using `==`         | Logical error      |
+
+---
+
+## 🧠 Best Practices
+
+* Use `char arr[]` if modification is required
+* Use `char *` for constant strings
+* Always ensure enough buffer size
+* Prefer safe variants when possible:
+
+  * `strncpy()`
+  * `strncat()`
+
+---
+
+## 📝 One-Line Exam Definitions
+
+* **String**: A character array terminated by `'\0'`
+* **String Literal**: A constant string stored in read-only memory
+* **String Pooling**: Compiler optimization that reuses identical string literals
+
+---
+
+## ✅ Summary
+
+* Strings can be handled via arrays or pointers
+* Arrays → writable, fixed size
+* Pointers → flexible, read-only content
+* `<string.h>` provides essential string functions
+* Buffer size management is critical
 
 ---
 
