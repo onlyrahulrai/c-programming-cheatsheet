@@ -405,12 +405,247 @@ int (*p2)[3];  // Pointer to array
 
 ---
 
-## Dynamic Memory Allocation
+# 📌 Dynamic Memory Allocation in C
+
+Dynamic Memory Allocation (DMA) allows a program to **request memory at runtime** instead of compile time.  
+This memory is allocated from the **Heap**, unlike local variables which are stored on the stack.
+
+DMA is useful when:
+- The size of data is **not known at compile time**
+- Large memory blocks are required
+- Memory needs to be **resized dynamically**
+
+---
+
+## 📚 Header File Required
+
+```c
+#include <stdlib.h>
+````
+
+This header provides:
 
 * `malloc()`
 * `calloc()`
 * `realloc()`
 * `free()`
+
+---
+
+## 🔹 1. `malloc()` – Memory Allocation
+
+### 📌 Description
+
+* Allocates a **single block of memory**
+* Memory is **uninitialized** (contains garbage values)
+* Faster than `calloc`
+* Returns `NULL` if memory allocation fails
+
+### 📄 Example (malloc)
+
+```c
+int *arr = malloc(n * sizeof(int));
+```
+
+### ✔ Safe Usage Pattern
+
+```c
+int *arr = malloc(n * sizeof(int));
+
+if (arr == NULL) {
+    printf("Memory allocation failed!\n");
+    return 1;
+}
+```
+
+### 🧠 Key Points
+
+* Memory is allocated from heap
+* Programmer must initialize values manually
+* Must be freed using `free()`
+
+---
+
+## 🔹 2. `calloc()` – Contiguous Allocation
+
+### 📌 Description
+
+* Allocates memory for **multiple elements**
+* Memory is **initialized to zero**
+* Slightly slower than `malloc`
+* Takes **two arguments**
+
+### 📄 Example (calloc)
+
+```c
+int *arr = calloc(n, sizeof(int));
+```
+
+### 🧠 Key Points
+
+* Safer when default zero values are required
+* Useful for arrays
+* Must be freed using `free()`
+
+---
+
+## 🔹 `malloc()` vs `calloc()`
+
+| Feature        | `malloc()` | `calloc()` |
+| -------------- | ---------- | ---------- |
+| Initialization | ❌ No       | ✅ Yes (0)  |
+| Speed          | Faster     | Slower     |
+| Arguments      | 1          | 2          |
+| Memory Content | Garbage    | Zero       |
+
+📌 **Exam Tip**
+Use `calloc()` when memory must be initialized.
+
+---
+
+## 🔹 3. `realloc()` – Reallocate Memory
+
+### 📌 Description
+
+* Used to **resize previously allocated memory**
+* Can increase or decrease memory size
+* Preserves existing data (up to min(oldSize, newSize))
+
+### 📄 Example (realloc)
+
+```c
+int *temp = realloc(arr, newSize * sizeof(int));
+```
+
+### ⚠️ Important Rule (EXAM FAVORITE)
+
+❌ Wrong (causes memory leak):
+
+```c
+arr = realloc(arr, newSize * sizeof(int));
+```
+
+✅ Correct:
+
+```c
+int *temp = realloc(arr, newSize * sizeof(int));
+if (temp != NULL)
+    arr = temp;
+```
+
+### 🧠 How `realloc()` Works Internally
+
+* If adjacent memory is available → extends same block
+* Otherwise:
+
+  1. Allocates new block
+  2. Copies old data
+  3. Frees old block
+  4. Returns new address
+
+---
+
+## 🔹 Printing All Elements After `realloc()`
+
+After reallocation:
+
+* Update the **size variable**
+* Read input for newly allocated memory
+* Loop till **new size**, not old size
+
+```c
+if (newSize > oldSize) {
+    for (int i = oldSize; i < newSize; i++)
+        scanf("%d", &arr[i]);
+}
+```
+
+---
+
+## 🔹 4. `free()` – Deallocate Memory
+
+### 📌 Description
+
+* Releases dynamically allocated memory
+* Prevents **memory leak**
+* Pointer becomes **dangling** after free
+
+### 📄 Example
+
+```c
+free(arr);
+arr = NULL;
+```
+
+---
+
+## ⚠️ Memory Leak
+
+### 📌 What is a Memory Leak?
+
+Memory allocated on heap but **never released**.
+
+### ❌ Example
+
+```c
+int *p = malloc(100);
+// no free()
+```
+
+### ✔ Correct
+
+```c
+free(p);
+```
+
+### 🚨 Why Memory Leak is Dangerous?
+
+* Heap memory gets exhausted
+* Program slows down or crashes
+* Wastes system resources
+
+---
+
+## ❌ Common Mistakes (Exam Traps)
+
+| Mistake                         | Result             |
+| ------------------------------- | ------------------ |
+| Not checking `NULL`             | Crash              |
+| Ignoring `realloc` return       | Memory leak        |
+| Using old size after realloc    | Garbage values     |
+| Forgetting `free()`             | Memory leak        |
+| Accessing memory after `free()` | Undefined behavior |
+
+---
+
+## 🧠 Stack vs Heap (Quick Comparison)
+
+| Stack                | Heap              |
+| -------------------- | ----------------- |
+| Automatic allocation | Manual allocation |
+| Fixed size           | Dynamic size      |
+| Faster               | Slower            |
+| Limited memory       | Large memory      |
+
+---
+
+## 📝 One-Line Exam Definitions
+
+* **Dynamic Memory Allocation**: Allocation of memory at runtime using heap.
+* **Memory Leak**: Memory allocated but not released.
+* **Dangling Pointer**: Pointer pointing to freed memory.
+* **Heap**: Memory area used for dynamic allocation.
+
+---
+
+## ✅ Summary
+
+* `malloc()` → Fast, uninitialized memory
+* `calloc()` → Zero-initialized memory
+* `realloc()` → Resize memory safely
+* `free()` → Prevent memory leaks
+* Always check for `NULL`
+* Always free allocated memory
 
 ---
 
