@@ -74,7 +74,7 @@ The content is designed for:
 
 ---
 
-# String
+# Strings
 
 A **string** is a sequence of characters terminated by a **null character (`'\0'`)**.  
 Strings can be handled using:
