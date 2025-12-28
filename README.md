@@ -1671,7 +1671,7 @@ int main()
 * Saves memory
 * Used in **low-level and system programming**
 
-## 🔹 22. Structure vs Union
+## 🔹 Structure vs Union
 
 | Feature | Structure                | Union               |
 | ------- | ------------------------ | ------------------- |
