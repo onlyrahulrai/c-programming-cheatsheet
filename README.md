@@ -901,7 +901,7 @@ free(p);
 
 ---
 
-# 📦 Structure
+# Structure
 
 ---
 
@@ -1322,7 +1322,7 @@ int main()
 * Support nesting, arrays, pointers, functions
 * Widely used in **DSA, OS, DBMS, Networking**
 
-# 📦 Union
+# Union
 
 ---
 
