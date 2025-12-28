@@ -23,11 +23,12 @@ The content is designed for:
 | 6 | [Strings](#strings) |
 | 7 | [Pointers](#pointers) |
 | 8 | [Functions & Recursion](#functions--recursion) |
-| 9 | [Structures & Unions](#structures--unions) |
-| 10 | [Dynamic Memory Allocation](#dynamic-memory-allocation) |
-| 11 | [File Handling](#file-handling) |
-| 12 | [Preprocessor Directives](#preprocessor-directives) |
-| 13 | [Common Mistakes & Exam Traps](#common-mistakes--exam-traps) |
+| 9 | [Dynamic Memory Allocation](#dynamic-memory-allocation) |
+| 10 | [Structure](#structure) |
+| 11 | [Union](#union) |
+| 12 | [File Handling](#file-handling) |
+| 13 | [Preprocessor Directives](#preprocessor-directives) |
+| 14 | [Common Mistakes & Exam Traps](#common-mistakes--exam-traps) |
 
 ---
 
@@ -656,14 +657,6 @@ int (*p2)[3];  // Pointer to array
 
 ---
 
-## Structures & Unions
-
-* Structure definition and access
-* Difference between structure and union
-* Nested structures
-
----
-
 # Dynamic Memory Allocation
 
 Dynamic Memory Allocation (DMA) allows a program to **request memory at runtime** instead of compile time.  
@@ -907,6 +900,784 @@ free(p);
 * Always free allocated memory
 
 ---
+
+# 📦 Structure
+
+---
+
+## 🔹 1. What is a Structure?
+
+A **structure** in C is a **user-defined data type** that allows grouping **variables of different data types** under a single name.
+
+It is used to represent a **real-world entity** that consists of multiple related attributes.
+
+### Example (Real World)
+
+A **Student** has:
+
+* Name
+* Age
+* Date of Birth
+
+All these belong to **one entity**, so we group them using a structure.
+
+---
+
+## 🔹 2. Why Do We Need Structures?
+
+Without structures:
+
+```c
+char name[50];
+int age;
+int day, month, year;
+```
+
+Problems:
+
+* Data is scattered
+* Hard to manage multiple records
+* Poor readability
+
+With structures:
+
+```c
+struct Student {
+    char name[50];
+    int age;
+};
+```
+
+### ✅ Advantages
+
+✔ Logical grouping of data
+✔ Easy handling of large records
+✔ Essential for databases, OS, compilers, APIs
+✔ Improves readability and maintainability
+
+---
+
+## 🔹 3. Structure Declaration Syntax
+
+```c
+struct structure_name {
+    data_type member1;
+    data_type member2;
+    ...
+};
+```
+
+### Example:
+
+```c
+struct Student {
+    char name[50];
+    int age;
+};
+```
+
+⚠ **Semicolon (`;`) after structure definition is mandatory**
+
+---
+
+## 🔹 4. Declaring Structure Variables
+
+### Method 1: After Declaration
+
+```c
+struct Student s1, s2;
+```
+
+### Method 2: During Declaration
+
+```c
+struct Student {
+    char name[50];
+    int age;
+} s1, s2;
+```
+
+---
+
+## 🔹 5. Accessing Structure Members
+
+Use the **dot (`.`) operator**.
+
+```c
+s1.age = 20;
+printf("%d", s1.age);
+```
+
+---
+
+## 🔹 6. Structure Initialization
+
+### 6.1 Positional Initialization
+
+```c
+struct Student s1 = {"Rahul", 21};
+```
+
+⚠ Order must match structure definition
+
+---
+
+### 6.2 Member-wise Assignment
+
+```c
+strcpy(s1.name, "Rahul");
+s1.age = 21;
+```
+
+---
+
+## 🔹 7. Nested Structures (Structure within Structure)
+
+### Example: `Date` inside `Student`
+
+```c
+struct Date
+{
+    int day;
+    int month;
+    int year;
+};
+
+typedef struct
+{
+    char name[256];
+    int age;
+    struct Date dob;
+} Student;
+```
+
+✔ Improves modularity
+✔ Represents hierarchical data
+
+---
+
+## 🔹 8. Designated Initialization (C99 Feature)
+
+### Example:
+
+```c
+Student s1 = {
+    .name = "John Doe",
+    .age = 21,
+    .dob = {
+        .day = 1,
+        .month = 1,
+        .year = 2025
+    }
+};
+```
+
+### ✅ Advantages
+
+✔ Order independent
+✔ Highly readable
+✔ Prevents logical mistakes
+
+---
+
+## 🔹 9. Accessing Nested Members
+
+```c
+printf("%s\n", s1.name);
+printf("%02d-%02d-%d\n",
+       s1.dob.day,
+       s1.dob.month,
+       s1.dob.year);
+```
+
+---
+
+## 🔹 10. Array of Structures
+
+Used to store **multiple records**.
+
+```c
+Student students[2] = {
+    {.name="Alice", .age=20, .dob={10,5,2004}},
+    {.name="Bob", .age=22, .dob={15,8,2002}}
+};
+```
+
+Access:
+
+```c
+students[0].age;
+students[1].dob.year;
+```
+
+---
+
+## 🔹 11. Structure and Functions
+
+### 11.1 Passing Structure (Call by Value)
+
+```c
+void display(Student s)
+{
+    printf("%s %d\n", s.name, s.age);
+}
+```
+
+❌ Copies entire structure
+✔ Suitable for small structures
+
+---
+
+### 11.2 Passing Structure (Call by Reference – Recommended)
+
+```c
+void display(Student *s)
+{
+    printf("%s %d\n", s->name, s->age);
+}
+```
+
+✔ Efficient
+✔ No data copy
+
+---
+
+## 🔹 12. Pointer to Structure
+
+### Declaration
+
+```c
+Student *ptr;
+```
+
+### Access Members
+
+```c
+ptr->age = 22;
+```
+
+`->` is called the **arrow operator**
+Equivalent to:
+
+```c
+(*ptr).age
+```
+
+---
+
+## 🔹 13. Dynamic Memory Allocation with Structures
+
+### Single Structure
+
+```c
+Student *s = malloc(sizeof(Student));
+```
+
+### Multiple Structures
+
+```c
+Student *students = malloc(n * sizeof(Student));
+```
+
+Always check:
+
+```c
+if (students == NULL) {
+    printf("Memory allocation failed");
+}
+```
+
+---
+
+## 🔹 14. Updating Structure Data
+
+```c
+s1.age++;
+s1.dob.year = 2026;
+```
+
+---
+
+## 🔹 15. Typedef with Structures
+
+### Without typedef
+
+```c
+struct Student s1;
+```
+
+### With typedef
+
+```c
+typedef struct {
+    char name[50];
+    int age;
+} Student;
+
+Student s1;
+```
+
+✔ Cleaner syntax
+✔ Professional coding style
+
+---
+
+## 🔹 16. Size of Structure
+
+```c
+printf("%lu", sizeof(Student));
+```
+
+Depends on:
+
+* Data types
+* Padding & alignment
+
+---
+
+## 🔹 17. Structure Padding & Alignment
+
+Example:
+
+```c
+struct Example {
+    char a;
+    int b;
+};
+```
+
+Memory layout:
+
+```
+a -> 1 byte
+padding -> 3 bytes
+b -> 4 bytes
+Total = 8 bytes
+```
+
+✔ Done for faster CPU access
+
+---
+
+## 🔹 18. Common Mistakes ❌
+
+❌ Forgetting semicolon after structure
+❌ Using `.` instead of `->` with pointer
+❌ Not allocating memory for pointer members
+❌ Not freeing dynamically allocated memory
+❌ Incorrect initializer order
+
+---
+
+## 🔹 19. Best Practices ✅
+
+✔ Use `typedef struct`
+✔ Prefer designated initialization
+✔ Pass structures by reference
+✔ Keep nested structures logical
+✔ Always free allocated memory
+
+---
+
+## 🔹 20. Complete Example Program
+
+```c
+#include <stdio.h>
+
+struct Date {
+    int day, month, year;
+};
+
+typedef struct {
+    char name[50];
+    int age;
+    struct Date dob;
+} Student;
+
+int main()
+{
+    Student s1 = {
+        .name = "John Doe",
+        .age = 21,
+        .dob = {1, 1, 2025}
+    };
+
+    printf("Name: %s\n", s1.name);
+    printf("Age: %d\n", s1.age);
+    printf("DOB: %02d-%02d-%d\n",
+           s1.dob.day,
+           s1.dob.month,
+           s1.dob.year);
+
+    return 0;
+}
+```
+
+---
+
+## 🔹 21. Summary
+
+* Structures group **heterogeneous data**
+* Essential for real-world modeling
+* Support nesting, arrays, pointers, functions
+* Widely used in **DSA, OS, DBMS, Networking**
+
+# 📦 Union
+
+---
+
+## 🔹 1. What is a Union?
+
+A **union** in C is a **user-defined data type** similar to a structure, but **all members share the same memory location**.
+
+👉 This means **only one member can store a value at a time**.
+
+---
+
+## 🔹 2. Why Do We Need Unions?
+
+Unions are used when:
+
+* Multiple variables **do not need to exist at the same time**
+* Memory usage needs to be **optimized**
+* We want to store **different data types in the same memory space**
+
+### Example Use Cases
+
+* Compiler design
+* Operating systems
+* Embedded systems
+* Protocol parsing
+* Memory-constrained programs
+
+---
+
+## 🔹 3. Difference Between Structure and Union (Quick Overview)
+
+| Feature           | Structure                | Union                     |
+| ----------------- | ------------------------ | ------------------------- |
+| Memory Allocation | Separate for each member | Shared                    |
+| Total Size        | Sum of all members       | Size of largest member    |
+| Value Storage     | All members at once      | Only one member at a time |
+| Memory Efficiency | Less                     | More                      |
+| Use Case          | Records                  | Variants                  |
+
+---
+
+## 🔹 4. Syntax of Union Declaration
+
+```c
+union union_name {
+    data_type member1;
+    data_type member2;
+    ...
+};
+```
+
+### Example:
+
+```c
+union Data {
+    int i;
+    float f;
+    char c;
+};
+```
+
+⚠ Semicolon (`;`) is **mandatory**
+
+---
+
+## 🔹 5. Declaring Union Variables
+
+### Method 1: After Declaration
+
+```c
+union Data d1;
+```
+
+### Method 2: During Declaration
+
+```c
+union Data {
+    int i;
+    float f;
+} d1;
+```
+
+---
+
+## 🔹 6. Accessing Union Members
+
+Same as structure → **dot (`.`) operator**
+
+```c
+d1.i = 10;
+printf("%d", d1.i);
+```
+
+⚠ Writing to one member **overwrites** the previous value.
+
+---
+
+## 🔹 7. Union Memory Behavior (Most Important Concept)
+
+```c
+union Data {
+    int i;
+    float f;
+    char c;
+};
+```
+
+Memory layout:
+
+* All members start at **same address**
+* Size = **max(sizeof(int), sizeof(float), sizeof(char))**
+
+```c
+printf("%lu", sizeof(union Data));
+```
+
+---
+
+## 🔹 8. Example: Demonstrating Memory Overwrite
+
+```c
+#include <stdio.h>
+
+union Data {
+    int i;
+    float f;
+};
+
+int main()
+{
+    union Data d;
+
+    d.i = 10;
+    printf("i = %d\n", d.i);
+
+    d.f = 3.14;
+    printf("f = %.2f\n", d.f);
+
+    printf("i after writing f = %d\n", d.i);
+
+    return 0;
+}
+```
+
+### Output Explanation
+
+* Assigning `f` **overwrites** `i`
+* Only **last written member** is valid
+
+---
+
+## 🔹 9. Union Initialization
+
+### At Declaration Time
+
+```c
+union Data d = {10};
+```
+
+✔ Initializes **first member only**
+
+---
+
+## 🔹 10. Union with `typedef`
+
+```c
+typedef union {
+    int id;
+    float salary;
+} Info;
+
+Info emp;
+emp.id = 101;
+```
+
+✔ Cleaner syntax
+✔ Professional usage
+
+---
+
+## 🔹 11. Union Inside Structure (Very Common)
+
+Used when a structure field can store **different types of values**.
+
+```c
+struct Student {
+    int roll;
+    union {
+        int marks;
+        float percentage;
+    } result;
+};
+```
+
+Usage:
+
+```c
+struct Student s;
+s.result.marks = 85;
+```
+
+---
+
+## 🔹 12. Structure Inside Union
+
+```c
+union Container {
+    int id;
+    struct {
+        int day, month, year;
+    } date;
+};
+```
+
+---
+
+## 🔹 13. Pointer to Union
+
+```c
+union Data *ptr;
+ptr->i = 20;
+```
+
+`->` operator works same as structure.
+
+---
+
+## 🔹 14. Array of Unions
+
+```c
+union Data arr[3];
+```
+
+Each element has **independent memory**, but inside each element, members share memory.
+
+---
+
+## 🔹 15. Size of Union
+
+```c
+printf("%lu", sizeof(union Data));
+```
+
+✔ Size equals **largest member**
+✔ Padding may apply for alignment
+
+---
+
+## 🔹 16. Union vs Structure (Detailed Comparison)
+
+| Aspect           | Structure | Union            |
+| ---------------- | --------- | ---------------- |
+| Memory           | Separate  | Shared           |
+| Multiple values  | Allowed   | Not allowed      |
+| Safety           | Safer     | Risky if misused |
+| Memory efficient | ❌         | ✔                |
+| Typical use      | Records   | Variant data     |
+
+---
+
+## 🔹 17. When to Use Union?
+
+✔ When only **one value is needed at a time**
+✔ When **memory optimization is critical**
+✔ When implementing **tagged data types**
+
+---
+
+## 🔹 18. Tagged Union (Best Practice)
+
+To track which member is valid:
+
+```c
+enum Type { INT, FLOAT };
+
+struct Value {
+    enum Type type;
+    union {
+        int i;
+        float f;
+    } data;
+};
+```
+
+Usage:
+
+```c
+struct Value v;
+v.type = INT;
+v.data.i = 10;
+```
+
+✔ Safe
+✔ Industry-grade design
+
+---
+
+## 🔹 19. Common Mistakes ❌
+
+❌ Assuming all members hold values simultaneously
+❌ Reading a member that was not last written
+❌ Forgetting which member is active
+❌ Using union where structure is needed
+
+---
+
+## 🔹 20. Best Practices ✅
+
+✔ Use union only when necessary
+✔ Track active member using `enum`
+✔ Comment clearly which member is active
+✔ Prefer structure if memory is not a concern
+
+---
+
+## 🔹 21. Complete Example Program
+
+```c
+#include <stdio.h>
+
+union Data {
+    int i;
+    float f;
+};
+
+int main()
+{
+    union Data d;
+
+    d.i = 100;
+    printf("Integer: %d\n", d.i);
+
+    d.f = 5.5;
+    printf("Float: %.2f\n", d.f);
+
+    return 0;
+}
+```
+
+---
+
+## 🔹 22. Summary
+
+* Union shares **one memory location**
+* Only **one member is valid at a time**
+* Saves memory
+* Used in **low-level and system programming**
+
+## 🔹 22. Structure vs Union
+
+| Feature | Structure                | Union               |
+| ------- | ------------------------ | ------------------- |
+| Memory  | Separate for each member | Shared              |
+| Size    | Sum of members           | Largest member      |
+| Usage   | Multiple values          | One value at a time |
 
 ## File Handling
 
