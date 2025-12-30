@@ -247,6 +247,8 @@ struct Node {
 
 ## Complete Singly Linked List Program
 
+Below is a complete, working, and exam-safe implementation of a Singly Linked List in C.
+
 ---
 
 ## 📌 Program Objective
@@ -425,7 +427,7 @@ int main() {
 
 ---
 
-## 🔹 Program Explanation ()
+## 🔹 Program Explanation (Step-by-Step)
 
 ### 🔸 1. `createNode()`
 
