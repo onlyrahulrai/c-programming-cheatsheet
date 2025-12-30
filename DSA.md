@@ -1,4 +1,4 @@
-# Linked List
+# Linked List in C — Concepts, Types, and Implementation
 
 ---
 
@@ -267,9 +267,6 @@ Below is a complete, working, and exam-safe implementation of a Singly Linked Li
 ---
 
 ## 🔹 Complete Program
-
-Below is a complete, working, and exam-safe implementation of a Singly Linked List in C.
-
 
 ```c
 #include <stdio.h>
